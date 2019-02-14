@@ -37,9 +37,9 @@ function excludeLockFiles(files) {
     return files;
 }
 exports.excludeLockFiles = excludeLockFiles;
-function onlyStaticDirectory(files, staticDir) {
+function onlyStaticDirectory(files) {
     function matcher(filePath) {
-        return !filePath.startsWith(staticDir);
+        return !filePath.startsWith('static');
     }
     return excludeFiles(files, matcher);
 }

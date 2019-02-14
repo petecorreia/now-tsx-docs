@@ -8,7 +8,8 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"noImplicitAny": true,
-		"outDir": "."
+		"outDir": ".",
+		"types": ["node", "package-json"]
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules"]

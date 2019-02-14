@@ -30,7 +30,7 @@ async function writeNpmRc(workPath, token) {
 exports.config = {
     maxLambdaSize: '5mb',
 };
-exports.build = async ({ files, workPath, entrypoint, config = { staticDir: 'static' }, }) => {
+exports.build = async ({ files, workPath, entrypoint }) => {
     utils_1.validateEntrypoint(entrypoint);
     console.log('downloading user files...');
     const entryDirectory = path_1.default.dirname(entrypoint);
@@ -84,9 +84,9 @@ exports.build = async ({ files, workPath, entrypoint, config = { staticDir: 'sta
     }));
     const nextStaticFiles = await glob('**', path_1.default.join(entryPath, '.next', 'static'));
     const staticFiles = Object.keys(nextStaticFiles).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, `_next/static/${file}`)]: nextStaticFiles[file] })), {});
-    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), 'static');
+    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory));
     const staticDirectoryFiles = Object.keys(nextStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, file)]: nextStaticDirectory[file] })), {});
-    const customStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), config.staticDir);
-    const customStaticDirectoryFiles = Object.keys(customStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, file)]: customStaticDirectory[file] })), {});
+    const customStaticDirectory = await glob('**', path_1.default.join(entryPath, 'static'));
+    const customStaticDirectoryFiles = Object.keys(customStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, `static/${file}`)]: customStaticDirectory[file] })), {});
     return Object.assign({}, lambdas, staticFiles, staticDirectoryFiles, customStaticDirectoryFiles);
 };
