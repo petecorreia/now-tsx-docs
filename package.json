@@ -8,7 +8,9 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"watch": "tsc -w"
+		"watch": "tsc -w",
+		"lint": "tslint -p tsconfig.json -c tslint.json",
+		"format": "prettier --config .prettierrc --write \"src/**/*.{js,ts,tsx}\""
 	},
 	"files": [
 		"index.js",
@@ -20,11 +22,9 @@
 		"@now/node-bridge": "0.1.4",
 		"@types/node": "^11.9.3",
 		"@types/package-json": "^5.0.0",
-		"@types/semver": "^5.5.0",
 		"execa": "^1.0.0",
 		"fs.promised": "^3.0.0",
 		"prettier": "^1.16.4",
-		"semver": "^5.6.0",
 		"tslint": "^5.12.1",
 		"tslint-config-prettier": "^1.18.0",
 		"typescript": "^3.3.3"

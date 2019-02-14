@@ -99,6 +99,7 @@ export function normalizePackageJson(defaultPackageJson: PackageJson = {}) {
 			...devDependencies,
 			// next is forced to canary
 			next: 'v7.0.2-canary.49',
+			'tsx-docs': 'latest',
 			// next-server is a dependency here
 			'next-server': undefined,
 		},

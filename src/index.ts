@@ -1,5 +1,4 @@
 import path from 'path'
-import semver from 'semver'
 import { PackageJson } from 'package-json'
 import {
 	BuildParams,
@@ -13,7 +12,6 @@ const { readFile, writeFile, unlink } = require('fs.promised')
 const { createLambda } = require('@now/build-utils/lambda.js')
 const download = require('@now/build-utils/fs/download.js')
 const FileFsRef = require('@now/build-utils/file-fs-ref.js')
-const FileBlob = require('@now/build-utils/file-blob')
 const {
 	runNpmInstall,
 	runPackageJsonScript,
@@ -58,19 +56,6 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 	const entryPath = path.join(workPath, entryDirectory)
 
 	const pkg = await readPackageJson(entryPath)
-
-	let tsxDocsVersion
-	if (pkg.dependencies && pkg.dependencies['tsx-docs']) {
-		tsxDocsVersion = pkg.dependencies['tsx-docs']
-	} else if (pkg.devDependencies && pkg.devDependencies['tsx-docs']) {
-		tsxDocsVersion = pkg.devDependencies['tsx-docs']
-	}
-
-	if (!tsxDocsVersion) {
-		throw new Error(
-			'No tsx-docs version could be detected in "package.json". Make sure `"tsx-docs"` is installed in "dependencies" or "devDependencies"'
-		)
-	}
 
 	console.log(`MODE: serverless`)
 

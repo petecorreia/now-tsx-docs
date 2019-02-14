@@ -38,16 +38,6 @@ exports.build = async ({ files, workPath, entrypoint }) => {
     await download(files, workPath);
     const entryPath = path_1.default.join(workPath, entryDirectory);
     const pkg = await readPackageJson(entryPath);
-    let tsxDocsVersion;
-    if (pkg.dependencies && pkg.dependencies['tsx-docs']) {
-        tsxDocsVersion = pkg.dependencies['tsx-docs'];
-    }
-    else if (pkg.devDependencies && pkg.devDependencies['tsx-docs']) {
-        tsxDocsVersion = pkg.devDependencies['tsx-docs'];
-    }
-    if (!tsxDocsVersion) {
-        throw new Error('No tsx-docs version could be detected in "package.json". Make sure `"tsx-docs"` is installed in "dependencies" or "devDependencies"');
-    }
     console.log(`MODE: serverless`);
     if (!pkg.scripts || !pkg.scripts['now-build']) {
         console.warn('WARNING: "now-build" script not found. Adding \'"now-build": "tsx-docs build"\' to "package.json" automatically');
