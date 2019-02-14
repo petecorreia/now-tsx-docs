@@ -6,6 +6,10 @@ export type BuildParams = {
 	files: Files
 	entrypoint: string
 	workPath: string
+	config: {
+		maxLambdaSize?: string
+		packageJson?: string
+	}
 }
 
 export function validateEntrypoint(entrypoint: string) {
