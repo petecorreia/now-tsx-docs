@@ -11,10 +11,10 @@ export type BuildParams = {
 export function validateEntrypoint(entrypoint: string) {
 	if (
 		!/package\.json$/.exec(entrypoint) &&
-		!/next\.config\.js$/.exec(entrypoint)
+		!/tsx-docs\.config\.js$/.exec(entrypoint)
 	) {
 		throw new Error(
-			'Specified "src" for "@now/next" has to be "package.json" or "next.config.js"'
+			'Specified "src" for "now-tsx-docs" has to be "package.json" or "tsx-docs.config.js"'
 		)
 	}
 }

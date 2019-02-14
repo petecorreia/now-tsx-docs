@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateEntrypoint(entrypoint) {
     if (!/package\.json$/.exec(entrypoint) &&
-        !/next\.config\.js$/.exec(entrypoint)) {
-        throw new Error('Specified "src" for "@now/next" has to be "package.json" or "next.config.js"');
+        !/tsx-docs\.config\.js$/.exec(entrypoint)) {
+        throw new Error('Specified "src" for "now-tsx-docs" has to be "package.json" or "tsx-docs.config.js"');
     }
 }
 exports.validateEntrypoint = validateEntrypoint;
