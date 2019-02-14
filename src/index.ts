@@ -150,7 +150,7 @@ exports.build = async ({
 
 	const nextStaticDirectory: { [key: string]: string } = onlyStaticDirectory(
 		includeOnlyEntryDirectory(files, entryDirectory),
-		config.staticDir
+		'static'
 	)
 	const staticDirectoryFiles = Object.keys(nextStaticDirectory).reduce(
 		(mappedFiles, file) => ({
@@ -160,5 +160,22 @@ exports.build = async ({
 		{}
 	)
 
-	return { ...lambdas, ...staticFiles, ...staticDirectoryFiles }
+	const customStaticDirectory: { [key: string]: string } = onlyStaticDirectory(
+		includeOnlyEntryDirectory(files, entryDirectory),
+		config.staticDir
+	)
+	const customStaticDirectoryFiles = Object.keys(customStaticDirectory).reduce(
+		(mappedFiles, file) => ({
+			...mappedFiles,
+			[path.join(entryDirectory, file)]: customStaticDirectory[file],
+		}),
+		{}
+	)
+
+	return {
+		...lambdas,
+		...staticFiles,
+		...staticDirectoryFiles,
+		...customStaticDirectoryFiles,
+	}
 }
