@@ -6,6 +6,9 @@ export type BuildParams = {
 	files: Files
 	entrypoint: string
 	workPath: string
+	config?: {
+		staticDir: string
+	}
 }
 
 export function validateEntrypoint(entrypoint: string) {
@@ -60,9 +63,9 @@ export function excludeLockFiles(files: Files) {
 	return files
 }
 
-export function onlyStaticDirectory(files: Files) {
+export function onlyStaticDirectory(files: Files, staticDir: string) {
 	function matcher(filePath: string) {
-		return !filePath.startsWith('static')
+		return !filePath.startsWith(staticDir)
 	}
 
 	return excludeFiles(files, matcher)

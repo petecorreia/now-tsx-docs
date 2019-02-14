@@ -37,9 +37,9 @@ function excludeLockFiles(files) {
     return files;
 }
 exports.excludeLockFiles = excludeLockFiles;
-function onlyStaticDirectory(files) {
+function onlyStaticDirectory(files, staticDir) {
     function matcher(filePath) {
-        return !filePath.startsWith('static');
+        return !filePath.startsWith(staticDir);
     }
     return excludeFiles(files, matcher);
 }
@@ -61,7 +61,7 @@ function normalizePackageJson(defaultPackageJson = {}) {
             // next-server is forced to canary
             'next-server': 'v7.0.2-canary.49' }), devDependencies: Object.assign({}, devDependencies, { 
             // next is forced to canary
-            next: 'v7.0.2-canary.49', 
+            next: 'v7.0.2-canary.49', 'tsx-docs': 'latest', 
             // next-server is a dependency here
             'next-server': undefined }), scripts: Object.assign({}, defaultPackageJson.scripts, { 'now-build': 'NODE_OPTIONS=--max_old_space_size=3000 next build --lambdas' }) });
 }

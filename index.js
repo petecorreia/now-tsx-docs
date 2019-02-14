@@ -9,7 +9,6 @@ const { readFile, writeFile, unlink } = require('fs.promised');
 const { createLambda } = require('@now/build-utils/lambda.js');
 const download = require('@now/build-utils/fs/download.js');
 const FileFsRef = require('@now/build-utils/file-fs-ref.js');
-const FileBlob = require('@now/build-utils/file-blob');
 const { runNpmInstall, runPackageJsonScript, } = require('@now/build-utils/fs/run-user-scripts.js');
 const glob = require('@now/build-utils/fs/glob.js');
 async function readPackageJson(entryPath) {
@@ -31,7 +30,7 @@ async function writeNpmRc(workPath, token) {
 exports.config = {
     maxLambdaSize: '5mb',
 };
-exports.build = async ({ files, workPath, entrypoint }) => {
+exports.build = async ({ files, workPath, entrypoint, config = { staticDir: 'static' }, }) => {
     utils_1.validateEntrypoint(entrypoint);
     console.log('downloading user files...');
     const entryDirectory = path_1.default.dirname(entrypoint);
@@ -83,9 +82,9 @@ exports.build = async ({ files, workPath, entrypoint }) => {
         });
         console.log(`Created lambda for page: "${page}"`);
     }));
-    const nextStaticFiles = await glob('**', path_1.default.join(entryPath, '.next', 'static'));
+    const nextStaticFiles = await glob('**', path_1.default.join(entryPath, '.next', config.staticDir));
     const staticFiles = Object.keys(nextStaticFiles).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, `_next/static/${file}`)]: nextStaticFiles[file] })), {});
-    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory));
+    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), config.staticDir);
     const staticDirectoryFiles = Object.keys(nextStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, file)]: nextStaticDirectory[file] })), {});
     return Object.assign({}, lambdas, staticFiles, staticDirectoryFiles);
 };
