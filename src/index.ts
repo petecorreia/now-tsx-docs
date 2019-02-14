@@ -136,7 +136,7 @@ exports.build = async ({
 
 	const nextStaticFiles = await glob(
 		'**',
-		path.join(entryPath, '.next', config.staticDir)
+		path.join(entryPath, '.next', 'static')
 	)
 	const staticFiles = Object.keys(nextStaticFiles).reduce(
 		(mappedFiles, file) => ({
