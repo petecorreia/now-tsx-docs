@@ -8,6 +8,7 @@
 	},
 	"scripts": {
 		"build": "tsc",
+		"prepare": "npm run build",
 		"watch": "tsc -w",
 		"lint": "tslint -p tsconfig.json -c tslint.json",
 		"format": "prettier --config .prettierrc --write \"src/**/*.{js,ts,tsx}\""

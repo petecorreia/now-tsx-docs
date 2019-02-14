@@ -82,9 +82,11 @@ exports.build = async ({ files, workPath, entrypoint, config = { staticDir: 'sta
         });
         console.log(`Created lambda for page: "${page}"`);
     }));
-    const nextStaticFiles = await glob('**', path_1.default.join(entryPath, '.next', config.staticDir));
+    const nextStaticFiles = await glob('**', path_1.default.join(entryPath, '.next', 'static'));
     const staticFiles = Object.keys(nextStaticFiles).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, `_next/static/${file}`)]: nextStaticFiles[file] })), {});
-    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), config.staticDir);
+    const nextStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), 'static');
     const staticDirectoryFiles = Object.keys(nextStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, file)]: nextStaticDirectory[file] })), {});
-    return Object.assign({}, lambdas, staticFiles, staticDirectoryFiles);
+    const customStaticDirectory = utils_1.onlyStaticDirectory(utils_1.includeOnlyEntryDirectory(files, entryDirectory), config.staticDir);
+    const customStaticDirectoryFiles = Object.keys(customStaticDirectory).reduce((mappedFiles, file) => (Object.assign({}, mappedFiles, { [path_1.default.join(entryDirectory, file)]: customStaticDirectory[file] })), {});
+    return Object.assign({}, lambdas, staticFiles, staticDirectoryFiles, customStaticDirectoryFiles);
 };
