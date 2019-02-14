@@ -47,12 +47,7 @@ exports.config = {
 	maxLambdaSize: '5mb',
 }
 
-exports.build = async ({
-	files,
-	workPath,
-	entrypoint,
-	config = { staticDir: 'static' },
-}: BuildParams) => {
+exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 	validateEntrypoint(entrypoint)
 
 	console.log('downloading user files...')
@@ -149,8 +144,7 @@ exports.build = async ({
 	)
 
 	const nextStaticDirectory: { [key: string]: string } = onlyStaticDirectory(
-		includeOnlyEntryDirectory(files, entryDirectory),
-		'static'
+		includeOnlyEntryDirectory(files, entryDirectory)
 	)
 	const staticDirectoryFiles = Object.keys(nextStaticDirectory).reduce(
 		(mappedFiles, file) => ({
@@ -160,14 +154,13 @@ exports.build = async ({
 		{}
 	)
 
-	const customStaticDirectory: { [key: string]: string } = onlyStaticDirectory(
-		includeOnlyEntryDirectory(files, entryDirectory),
-		config.staticDir
-	)
+	const customStaticDirectory = await glob('**', path.join(entryPath, 'static'))
 	const customStaticDirectoryFiles = Object.keys(customStaticDirectory).reduce(
 		(mappedFiles, file) => ({
 			...mappedFiles,
-			[path.join(entryDirectory, file)]: customStaticDirectory[file],
+			[path.join(entryDirectory, `static/${file}`)]: customStaticDirectory[
+				file
+			],
 		}),
 		{}
 	)
