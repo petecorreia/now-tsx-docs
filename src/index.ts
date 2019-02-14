@@ -142,6 +142,7 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 		}),
 		{}
 	)
+	console.log('staticFiles: ', staticFiles)
 
 	const nextStaticDirectory: { [key: string]: string } = onlyStaticDirectory(
 		includeOnlyEntryDirectory(files, entryDirectory)
@@ -153,6 +154,7 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 		}),
 		{}
 	)
+	console.log('staticDirectoryFiles: ', staticDirectoryFiles)
 
 	return { ...lambdas, ...staticFiles, ...staticDirectoryFiles }
 }
