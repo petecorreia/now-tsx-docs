@@ -1,0 +1,32 @@
+{
+	"name": "now-tsx-docs",
+	"version": "0.0.1",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/petecorreia/now-tsx-docs.git"
+	},
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc -w"
+	},
+	"files": [
+		"index.js",
+		"launcher.js",
+		"utils.js"
+	],
+	"dependencies": {
+		"@now/build-utils": "^0.4.34",
+		"@now/node-bridge": "0.1.4",
+		"@types/node": "^11.9.3",
+		"@types/package-json": "^5.0.0",
+		"@types/semver": "^5.5.0",
+		"execa": "^1.0.0",
+		"fs.promised": "^3.0.0",
+		"prettier": "^1.16.4",
+		"semver": "^5.6.0",
+		"tslint": "^5.12.1",
+		"tslint-config-prettier": "^1.18.0",
+		"typescript": "^3.3.3"
+	}
+}

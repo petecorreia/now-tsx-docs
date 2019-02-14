@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+process.env.NODE_ENV = 'production';
+const http_1 = require("http");
+const { Bridge } = require('./now__bridge.js');
+const page = require('./page.js');
+const bridge = new Bridge();
+bridge.port = 3000;
+const server = new http_1.Server(page.render);
+server.listen(bridge.port);
+exports.launcher = bridge.launcher;
