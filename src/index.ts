@@ -59,16 +59,16 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 
 	const pkg = await readPackageJson(entryPath)
 
-	let nextVersion
-	if (pkg.dependencies && pkg.dependencies.next) {
-		nextVersion = pkg.dependencies.next
-	} else if (pkg.devDependencies && pkg.devDependencies.next) {
-		nextVersion = pkg.devDependencies.next
+	let tsxDocsVersion
+	if (pkg.dependencies && pkg.dependencies['tsx-docs']) {
+		tsxDocsVersion = pkg.dependencies['tsx-docs']
+	} else if (pkg.devDependencies && pkg.devDependencies['tsx-docs']) {
+		tsxDocsVersion = pkg.devDependencies['tsx-docs']
 	}
 
-	if (!nextVersion) {
+	if (!tsxDocsVersion) {
 		throw new Error(
-			'No Next.js version could be detected in "package.json". Make sure `"next"` is installed in "dependencies" or "devDependencies"'
+			'No tsx-docs version could be detected in "package.json". Make sure `"tsx-docs"` is installed in "dependencies" or "devDependencies"'
 		)
 	}
 
@@ -76,10 +76,10 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 
 	if (!pkg.scripts || !pkg.scripts['now-build']) {
 		console.warn(
-			'WARNING: "now-build" script not found. Adding \'"now-build": "next build"\' to "package.json" automatically'
+			'WARNING: "now-build" script not found. Adding \'"now-build": "tsx-docs build"\' to "package.json" automatically'
 		)
 		pkg.scripts = {
-			'now-build': 'next build',
+			'now-build': 'tsx-docs build',
 			...(pkg.scripts || {}),
 		}
 		console.log('normalized package.json result: ', pkg)
