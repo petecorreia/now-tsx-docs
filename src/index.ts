@@ -18,8 +18,19 @@ const {
 } = require('@now/build-utils/fs/run-user-scripts.js')
 const glob = require('@now/build-utils/fs/glob.js')
 
-async function readPackageJson(entryPath: string) {
-	const packagePath = path.join(entryPath, 'package.json')
+function getPackageJsonPath(
+	entryPath: string,
+	workPath: string,
+	config: { packageJson?: string }
+) {
+	if (config.packageJson) {
+		return path.join(workPath, config.packageJson)
+	}
+	return path.join(entryPath, 'package.json')
+}
+
+async function readPackageJson(pathToPackageJson: string) {
+	const packagePath = pathToPackageJson
 
 	try {
 		return JSON.parse(await readFile(packagePath, 'utf8'))
@@ -29,11 +40,11 @@ async function readPackageJson(entryPath: string) {
 	}
 }
 
-async function writePackageJson(workPath: string, packageJson: PackageJson) {
-	await writeFile(
-		path.join(workPath, 'package.json'),
-		JSON.stringify(packageJson, null, 2)
-	)
+async function writePackageJson(
+	pathToPackageJson: string,
+	packageJson: PackageJson
+) {
+	await writeFile(pathToPackageJson, JSON.stringify(packageJson, null, 2))
 }
 
 async function writeNpmRc(workPath: string, token: string) {
@@ -47,7 +58,12 @@ exports.config = {
 	maxLambdaSize: '5mb',
 }
 
-exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
+exports.build = async ({
+	files,
+	workPath,
+	entrypoint,
+	config = {},
+}: BuildParams) => {
 	validateEntrypoint(entrypoint)
 
 	console.log('downloading user files...')
@@ -55,7 +71,9 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 	await download(files, workPath)
 	const entryPath = path.join(workPath, entryDirectory)
 
-	const pkg = await readPackageJson(entryPath)
+	const pkg = await readPackageJson(
+		getPackageJsonPath(entryPath, workPath, config)
+	)
 
 	console.log(`MODE: serverless`)
 
@@ -68,7 +86,7 @@ exports.build = async ({ files, workPath, entrypoint }: BuildParams) => {
 			...(pkg.scripts || {}),
 		}
 		console.log('normalized package.json result: ', pkg)
-		await writePackageJson(entryPath, pkg)
+		await writePackageJson(getPackageJsonPath(entryPath, workPath, config), pkg)
 	}
 
 	if (process.env.NPM_AUTH_TOKEN) {

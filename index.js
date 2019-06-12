@@ -11,8 +11,14 @@ const download = require('@now/build-utils/fs/download.js');
 const FileFsRef = require('@now/build-utils/file-fs-ref.js');
 const { runNpmInstall, runPackageJsonScript, } = require('@now/build-utils/fs/run-user-scripts.js');
 const glob = require('@now/build-utils/fs/glob.js');
-async function readPackageJson(entryPath) {
-    const packagePath = path_1.default.join(entryPath, 'package.json');
+function getPackageJsonPath(entryPath, workPath, config) {
+    if (config.packageJson) {
+        return path_1.default.join(workPath, config.packageJson);
+    }
+    return path_1.default.join(entryPath, 'package.json');
+}
+async function readPackageJson(pathToPackageJson) {
+    const packagePath = pathToPackageJson;
     try {
         return JSON.parse(await readFile(packagePath, 'utf8'));
     }
@@ -21,8 +27,8 @@ async function readPackageJson(entryPath) {
         return {};
     }
 }
-async function writePackageJson(workPath, packageJson) {
-    await writeFile(path_1.default.join(workPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+async function writePackageJson(pathToPackageJson, packageJson) {
+    await writeFile(pathToPackageJson, JSON.stringify(packageJson, null, 2));
 }
 async function writeNpmRc(workPath, token) {
     await writeFile(path_1.default.join(workPath, '.npmrc'), `//registry.npmjs.org/:_authToken=${token}`);
@@ -30,19 +36,19 @@ async function writeNpmRc(workPath, token) {
 exports.config = {
     maxLambdaSize: '5mb',
 };
-exports.build = async ({ files, workPath, entrypoint }) => {
+exports.build = async ({ files, workPath, entrypoint, config = {}, }) => {
     utils_1.validateEntrypoint(entrypoint);
     console.log('downloading user files...');
     const entryDirectory = path_1.default.dirname(entrypoint);
     await download(files, workPath);
     const entryPath = path_1.default.join(workPath, entryDirectory);
-    const pkg = await readPackageJson(entryPath);
+    const pkg = await readPackageJson(getPackageJsonPath(entryPath, workPath, config));
     console.log(`MODE: serverless`);
     if (!pkg.scripts || !pkg.scripts['now-build']) {
         console.warn('WARNING: "now-build" script not found. Adding \'"now-build": "tsx-docs build"\' to "package.json" automatically');
         pkg.scripts = Object.assign({ 'now-build': 'tsx-docs build' }, (pkg.scripts || {}));
         console.log('normalized package.json result: ', pkg);
-        await writePackageJson(entryPath, pkg);
+        await writePackageJson(getPackageJsonPath(entryPath, workPath, config), pkg);
     }
     if (process.env.NPM_AUTH_TOKEN) {
         console.log('found NPM_AUTH_TOKEN in environment, creating .npmrc');
