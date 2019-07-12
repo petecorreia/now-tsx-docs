@@ -22,7 +22,7 @@
 		"@now/build-utils": "^0.4.34",
 		"@now/node-bridge": "0.1.4",
 		"@types/node": "^11.9.3",
-		"@types/package-json": "^5.0.0",
+		"@types/package-json": "^5.0.1",
 		"execa": "^1.0.0",
 		"fs.promised": "^3.0.0",
 		"prettier": "^1.16.4",
