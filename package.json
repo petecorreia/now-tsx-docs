@@ -19,7 +19,7 @@
 		"utils.js"
 	],
 	"dependencies": {
-		"@now/build-utils": "^0.4.34",
+		"@now/build-utils": "^0.8.4",
 		"@now/node-bridge": "0.1.4",
 		"@types/node": "^11.9.3",
 		"@types/package-json": "^5.0.0",
